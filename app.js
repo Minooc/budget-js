@@ -7,6 +7,10 @@ var totalExpense = 0;
 var incomeConstant = 0;
 var expenseConstant = 0;
 
+// Store income and expense objects
+var incomeList = [];
+var expenseList = [];
+
 // container object
 var incomeContainer = function(id, value, description) {
   this.id = id;
@@ -63,10 +67,14 @@ document.querySelector('.add__btn').addEventListener('click', function() {
 
     // Create an object
     var obj;
-    if (addType == "income")
+    if (addType == "income") {
       obj = new incomeContainer(idName, addValue, addDes);
-    else
+      incomeList.push(obj);
+    }
+    else {
       obj = new expenseContainer(idName, addValue, addDes);
+      expenseList.push(obj);
+    }
 
 
 
@@ -104,26 +112,45 @@ document.querySelector('.add__btn').addEventListener('click', function() {
 
 // Delete income object
 document.querySelector('.income').addEventListener('click', function(e) {
-  var parentClass = e.target.parentNode;
-  /*
-  var thisValue;
-  for (var k in incomeContainer) {
-    console.log(k);
-    if (k.id == parentClass) {
-      thisValue = k.value;
-    }
-  }
-  */
-  //console.log(thisValue);
+  if (e.target.type == 'submit') {
 
-  parentClass.innerHTML = "";
+    var parentClass = e.target.parentNode;
+    var thisValue;
+    for (var ind=0; ind < incomeList.length; ind++) {
+
+      if (incomeList[ind].id == parentClass.className) {
+        thisValue = incomeList[ind].value;
+        incomeList.splice(ind, 1);
+        break;
+      }
+    }
+    totalIncome -= thisValue;
+    parentClass.innerHTML = "";
+
+    console.log(incomeList.length);
+    calculateBudget();
+  }
 });
 
 
 // Delete expense object
 document.querySelector('.expenses').addEventListener('click', function(e) {
+  if (e.target.type == 'submit') {
     var parentClass = e.target.parentNode;
+    var thisValue;
+    for (var ind=0; ind < expenseList.length; ind++) {
+
+      if (expenseList[ind].id == parentClass.className) {
+        thisValue = expenseList[ind].value;
+        expenseList.splice(ind, 1);
+        break;
+      }
+    }
+    totalExpense -= thisValue;
     parentClass.innerHTML = "";
+
+    calculateBudget();
+  }
 });
 
 
